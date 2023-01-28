@@ -33,7 +33,7 @@ function App(): JSX.Element {
       </Stack.Navigator>
     </NavigationContainer> */}
     <NavigationContainer>
-      <Drawer.Navigator screenOptions={{ headerShown: false,drawerPosition:'right',  }} initialRouteName="Home">
+      <Drawer.Navigator screenOptions={{ headerShown: false,drawerPosition:'right',  }} initialRouteName="Signup">
       <Drawer.Screen name="Home" component={Home} />
         <Drawer.Screen name="Signup" component={Signup} />
         <Drawer.Screen name="Signin" component={Signin} />
