@@ -1,11 +1,11 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React,{useEffect} from 'react'
-
+import {useSelector} from 'react-redux'
 const Unsplash = ({navigation}) => {
-
+  const isAuthenticated = useSelector(state  => state.isAuthenticated);
 useEffect(() => 
 {setTimeout(()=>
-navigation.navigate('Home')
+ isAuthenticated ?  navigation.navigate('Home') : navigation.navigate("Signin")
 ,2000)},[])
   return (
     <View style={styles.container}>
