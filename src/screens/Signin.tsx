@@ -8,67 +8,63 @@ import {
   View,
   TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch } from "react-redux"
-import { login } from "../Redux/action";
+import React, {useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useDispatch} from 'react-redux';
+import {login} from '../Redux/action';
 
-const Signin = ({ navigation }) => {
+const Signin = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  const dispatch = useDispatch()
 
-function handlelogginUser(data){
-    console.log(data)
-    dispatch(login(data))
-}
+  const dispatch = useDispatch();
+
+  function handlelogginUser(data) {
+    console.log(data);
+    dispatch(login(data));
+  }
   const handleSubmit = async () => {
-    try{
-      console.log('clicked')
-      let formData= {email,password};
-      let checkLogin = LoginCheck(formData)
-        checkLogin.then((res)=>{
-            if(res){
-                handlelogginUser(res)
-               
-            }
-        })
-    }
-    catch(err){
+    try {
+      console.log('clicked');
+      let formData = {email, password};
+      let checkLogin = LoginCheck(formData);
+      checkLogin.then(res => {
+        if (res) {
+          handlelogginUser(res);
+        }
+      });
+    } catch (err) {
       console.log(err);
     }
-  }
-
-      async function LoginCheck(data){
-        try {
-          let res = await fetch('https://bright-mite-bell-bottoms.cyclic.app/signin', {
-            method:'POST' ,
-            body:JSON.stringify(data) ,
-            headers:{
-                'Content-Type':'application/json',
-                 Accept: 'application/json',
-            }
-            })
-            ;
-        res= await res.json();
-        console.log(res)
-        if(res.token){
-            
-            return res;
-        }else{
-            Alert.alert('Wrong Credentials')
-        }
-        } catch (error) {
-          return error
-        }
-      
-       
-     
+  };
+//function to check if user has registered making fetch request to server and checking with mongodb database
+  async function LoginCheck(data) {
+    try {
+      let res = await fetch(
+        'https://bright-mite-bell-bottoms.cyclic.app/signin',
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
+      res = await res.json();
+      console.log(res);
+      if (res.token) {
+        return res;
+      } else {
+        Alert.alert('Wrong Credentials');
+      }
+    } catch (error) {
+      return error;
     }
+  }
   return (
-    <ScrollView >
+    <ScrollView>
       <View style={styles.header}>
         <Image
           style={styles.header_logo}
@@ -81,7 +77,7 @@ function handlelogginUser(data){
       {/* //form */}
       <View style={styles.form}>
         <View>
-          <Text>Email</Text>
+          <Text style={{color: '#434242'}}>Email</Text>
           <TextInput
             value={email}
             style={styles.input}
@@ -89,7 +85,7 @@ function handlelogginUser(data){
           />
         </View>
         <View>
-          <Text>Password</Text>
+          <Text style={{color: '#434242'}}>Password</Text>
           <TextInput
             value={password}
             style={styles.input}
@@ -98,16 +94,17 @@ function handlelogginUser(data){
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={{ color: 'white' }}>Login</Text>
+          <Text style={{color: 'white'}}>Login</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.already_have_account}>
-        <Text style={{marginLeft:20}}> Don't have an Account ?</Text>
+        <Text style={{marginLeft: 20, color: '#434242'}}>
+          {' '}
+          Don't have an Account ?
+        </Text>
         <Text
-     
           onPress={() => navigation.navigate('Signup')}
-          style={{ textDecorationLine: 'underline', color: 'grey' }}
-        >
+          style={{textDecorationLine: 'underline', color: 'grey'}}>
           Join Unsplash
         </Text>
       </View>
@@ -135,9 +132,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontWeight: 'bold',
     color: 'black',
+    color: '#434242',
   },
   small_text: {
     fontSize: 15,
+    color: '#434242',
     textAlign: 'center',
   },
   body_container: {
@@ -158,6 +157,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginVertical: 10,
     borderRadius: 4,
+    color: '#434242',
   },
   button: {
     width: 300,

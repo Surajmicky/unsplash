@@ -6,153 +6,165 @@ import {
   Text,
   View,
   TextInput,
-  Alert
+  Alert,
 } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, {useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const Signup = ({ navigation }) => {
-  
+const Signup = ({navigation}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-
+//function to register and store user details to mongodb database
   const handleSubmit = async () => {
-    try{
-
-      let formData= {firstName,lastName,email,userName,password};
-      let res= await fetch('https://bright-mite-bell-bottoms.cyclic.app/signup' , {
-        method:'POST' ,
-        body:JSON.stringify(formData) ,
-        headers:{
-            'Content-Type':'application/json',
+    try {
+      let formData = {firstName, lastName, email, userName, password};
+      let res = await fetch(
+        'https://bright-mite-bell-bottoms.cyclic.app/signup',
+        {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
             Accept: 'application/json',
-        }
-        })
-        res= await res.json();
-        console.log(res);
-        if(res.message=='User created successfully'){
-        Alert.alert('sucessfully sign up !!..')
-        navigation.navigate('Signin')
-        }else{
-            throw new Error('email already exists')
-        }
- 
-    }catch(err){
-       console.log(err)
+          },
+        },
+      );
+      res = await res.json();
+      console.log(res);
+      if (res.message == 'User created successfully') {
+        Alert.alert('sucessfully sign up !!..');
+        navigation.navigate('Signin');
+      } else {
+        throw new Error('email already exists');
+      }
+    } catch (err) {
+      console.log(err);
     }
-
-  }
-  
+  };
 
   return (
     <SafeAreaView>
-    <ScrollView>
-      <View style={styles.header}>
-        <Image
-          style={styles.header_img}
-          source={{
-            uri: 'https://images.unsplash.com/photo-1674407728563-f30774195b0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDE1fGJvOGpRS1RhRTBZfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-          }}
-        />
-        <Image
-          style={styles.header_logo}
-          source={require('../assets/unsplash.png')}
-        />
-        <Text style={styles.large_text}>Creation starts here</Text>
-        <Text style={styles.small_text}>
-          Access 4,766,189 free,high-resolution photos you can't find anywhere
-          else
-        </Text>
-      </View>
-      <View style={styles.body_container}>
-        <Text style={{ fontSize: 30, flex: 1, fontWeight: 'bold' }}>
-          Join Unsplash
-        </Text>
-        <View style={styles.already_have_account}>
-          <Text>Already have an Account</Text>
-          <Text
-            onPress={() => navigation.navigate('Signin')}
-            style={{ textDecorationLine: 'underline', color: 'grey' }}
-          >
-            Login
+      <ScrollView>
+        <View style={styles.header}>
+          <Image
+            style={styles.header_img}
+            source={{
+              uri: 'https://images.unsplash.com/photo-1674407728563-f30774195b0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDE1fGJvOGpRS1RhRTBZfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
+            }}
+          />
+          <Image
+            style={styles.header_logo}
+            source={require('../assets/unsplash.png')}
+          />
+          <Text style={styles.large_text}>Creation starts here</Text>
+          <Text style={styles.small_text}>
+            Access 4,766,189 free,high-resolution photos you can't find anywhere
+            else
           </Text>
         </View>
-      </View>
-      {/* //form */}
-      <View style={styles.form}>
-        <View style={styles.full_name}>
+        <View style={styles.body_container}>
+          <Text
+            style={{
+              fontSize: 30,
+              flex: 1,
+              fontWeight: 'bold',
+              color: '#434242',
+            }}>
+            Join Unsplash
+          </Text>
+          <View style={styles.already_have_account}>
+            <Text style={{color: '#434242'}}>Already have an Account</Text>
+            <Text
+              onPress={() => navigation.navigate('Signin')}
+              style={{textDecorationLine: 'underline', color: 'grey'}}>
+              Login
+            </Text>
+          </View>
+        </View>
+        {/* //form */}
+        <View style={styles.form}>
+          <View style={styles.full_name}>
+            <View>
+              <Text style={{color: '#434242'}}>First Name</Text>
+              <TextInput
+                style={styles.input_name}
+                value={firstName}
+                onChangeText={text => setFirstName(text)}
+              />
+            </View>
+
+            <View>
+              <Text style={{color: '#434242'}}>Last Name</Text>
+              <TextInput
+                value={lastName}
+                style={styles.input_name}
+                onChangeText={text => setLastName(text)}
+              />
+            </View>
+          </View>
+
           <View>
-            <Text>First Name</Text>
+            <Text style={{color: '#434242'}}>Email</Text>
             <TextInput
-              style={styles.input_name}
-              value={firstName}
-              onChangeText={text => setFirstName(text)}
+              value={email}
+              style={styles.input}
+              onChangeText={text => setEmail(text)}
             />
           </View>
 
           <View>
-            <Text>Last Name</Text>
+            <Text style={{color: '#434242'}}>Username</Text>
             <TextInput
-              value={lastName}
-              style={styles.input_name}
-              onChangeText={text => setLastName(text)}
+              value={userName}
+              style={styles.input}
+              onChangeText={text => setUserName(text)}
             />
           </View>
-        </View>
 
-        <View>
-          <Text>Email</Text>
-          <TextInput
-            value={email}
-            style={styles.input}
-            onChangeText={text => setEmail(text)}
-          />
-        </View>
+          <View>
+            <Text style={{color: '#434242'}}>Password</Text>
+            <TextInput
+              value={password}
+              style={styles.input}
+              onChangeText={text => setPassword(text)}
+              secureTextEntry={true}
+            />
+          </View>
 
-        <View>
-          <Text>Username</Text>
-          <TextInput
-            value={userName}
-            style={styles.input}
-            onChangeText={text => setUserName(text)}
-          />
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={{color: 'white'}}>Join</Text>
+          </TouchableOpacity>
         </View>
-
-        <View>
-          <Text>Password</Text>
-          <TextInput
-            value={password}
-            style={styles.input}
-            onChangeText={text => setPassword(text)}
-            secureTextEntry={true}
-          />
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            marginBottom: 20,
+            alignContent: 'center',
+            width: '98%',
+          }}>
+          <Text style={{marginLeft: 20, color: '#434242'}}>
+            {' '}
+            By joining, you agree to the{' '}
+          </Text>
+          <Text style={{textDecorationLine: 'underline', color: 'grey'}}>
+            Terms
+          </Text>
+          <Text style={{color: '#434242', color: '#434242'}}> and </Text>
+          <Text
+            style={{
+              textDecorationLine: 'underline',
+              marginLeft: 20,
+              color: 'grey',
+            }}>
+            Privacy Policy
+          </Text>
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={{ color: 'white' }}>Join</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginBottom: 20,
-          alignContent: 'center',
-          width: '98%',
-        }}
-      >
-        <Text style={{ marginLeft: 20 }}> By joining, you agree to the </Text>
-        <Text style={{ textDecorationLine: 'underline' }}>Terms</Text>
-        <Text> and </Text>
-        <Text style={{ textDecorationLine: 'underline', marginLeft: 20 }}>
-          Privacy Policy
-        </Text>
-      </View>
-    </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -216,6 +228,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginVertical: 10,
     borderRadius: 4,
+    color: '#434242',
   },
   input_name: {
     borderWidth: 1,

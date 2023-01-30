@@ -5,12 +5,13 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  SafeAreaView,
   Dimensions,
 } from 'react-native';
 import React, { useState } from 'react';
 import { SearchBar } from '@rneui/themed';
 import { Icon } from '@rneui/themed';
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux';
 import { Avatar } from '@rneui/themed';
 let { width } = Dimensions.get('window');
 
@@ -22,13 +23,14 @@ const Navbar = ({
   text,
   setSearchImages,
   setSearchPage,
+  
 }) => {
   //check if user has logged in
-  const isAuthenticated = useSelector(state  => state.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.isAuthenticated);
   // taking user name for avatar
-  const user= useSelector(state => state.user);
+  const user = useSelector(state => state.user);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <Image
           style={styles.nav_logo}
@@ -58,22 +60,29 @@ const Navbar = ({
           value={text}
         />
       </View>
-      <View style={{ width: 50, alignItems: 'center',flexDirection:'row',gap:10,paddingRight:10 }}>
-      <Avatar
-    size={35}
-    rounded
-    title= {isAuthenticated ? user.avatar_name:'login'}
-    containerStyle={{ backgroundColor: "purple" }}
-  />
+      <View
+        style={{
+          width: 50,
+          alignItems: 'center',
+          flexDirection: 'row',
+          gap: 10,
+          paddingRight: 10,
+        }}
+      >
+        <Avatar
+          size={35}
+          rounded
+          title={isAuthenticated ? user.avatar_name : 'login'}
+          containerStyle={{ backgroundColor: 'purple' }}
+        />
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image
             style={{ width: 25, height: 25 }}
             source={require('../assets/menu.png')}
           />
         </TouchableOpacity>
-
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -98,19 +107,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     border: 'none',
-    width:230
-    
+   flex:1
   },
   search_bar_container: {
     backgroundColor: 'white',
     border: 'none',
- 
   },
   search_bar_input: {
     backgroundColor: '#dddcdc',
     fontSize: 10,
     borderRadius: 40,
     height: 50,
-    
+  
   },
 });

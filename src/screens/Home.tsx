@@ -6,24 +6,28 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
 import Card from '../Components/Card';
 import Navbar from '../Components/Navbar';
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux';
+import RNFetchBlob from 'rn-fetch-blob';
 const Home = ({ navigation }) => {
+  //states for images, page No, searched items
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchPage, setSearchPage] = useState(1);
   const [searchImages, setSearchImages] = useState([]);
   const [text, setText] = useState('');
-
-  
   useEffect(() => {
+    //initial images mounting in home page
     fetchImages(page);
   }, []);
   const fetchSearchResult = async (searchPage, text) => {
+    // fetch search results 
     try {
       setIsLoading(true);
       const { data } = await axios.get(
@@ -37,12 +41,14 @@ const Home = ({ navigation }) => {
       console.log(error);
     }
   };
+  //props for navbar
   const navprops = {
     fetchSearchResult,
     searchPage,
     setSearchImages,
     setSearchPage,
   };
+  //making GET request to unsplash api for images every time for infinite scrolling
   const fetchImages = async page => {
     try {
       setIsLoading(true);
@@ -56,7 +62,7 @@ const Home = ({ navigation }) => {
       console.log(error);
     }
   };
-
+//function to pagination 
   const handleLoadMore = () => {
     setPage(page + 1);
     fetchImages(page + 1);
@@ -66,7 +72,43 @@ const Home = ({ navigation }) => {
     setSearchPage(searchPage + 1);
     fetchSearchResult(searchPage + 1, text);
   };
-
+  //asking permission from user for storage to save image
+  const requestStoragePermission = async (downloadUrl) => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Image Download permission',
+          message:
+            'Suraj Unsplash app need access to your storage' +
+            'so you can take download awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the storage');
+        downloadImage(downloadUrl)
+      } else {
+        console.log('storage permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  //function for downloading the image
+ const downloadImage=(downloadUrl) => {
+  const {config,fs}=RNFetchBlob;
+  const fileDir= fs.dirs.PictureDir;
+  config({
+    fileCache:true,
+    addAndroidDownloads:
+    {useDownloadManager:true,
+    notification:true,
+  path:fileDir+"/image"+Math.floor(new Date().getDate()+ Math.random())+".jpeg"}
+  }).fetch('GET',downloadUrl).then(res=> Alert.alert("Image downloaded successfully"))
+ };
   return (
     <View>
       <Navbar
@@ -76,6 +118,7 @@ const Home = ({ navigation }) => {
         {...navprops}
       />
       {searchImages.length > 0 ? (
+        //flatlist before searching
         <FlatList
           data={searchImages}
           renderItem={({ item }) => (
@@ -84,6 +127,8 @@ const Home = ({ navigation }) => {
               profile_img={item.user.profile_image.small}
               name={item.user.name}
               image={item.urls.regular}
+              downloadUrl={item.links.download}
+              requestStoragePermission={requestStoragePermission}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -94,6 +139,7 @@ const Home = ({ navigation }) => {
           }
         />
       ) : (
+        //flatlist after search
         <FlatList
           data={images}
           renderItem={({ item }) => (
@@ -102,6 +148,8 @@ const Home = ({ navigation }) => {
               profile_img={item.user.profile_image.small}
               name={item.user.name}
               image={item.urls.regular}
+              downloadUrl={item.urls.full}
+              requestStoragePermission={requestStoragePermission}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
